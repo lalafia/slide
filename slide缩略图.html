@@ -1,0 +1,162 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta  charset="utf-8">
+        <title>
+            轮播图
+        </title>
+        <style>
+        .slide_container {
+            margin: 0;
+            position: fixed;
+            left: 240px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 800px;
+            height: 600px;
+            overflow: hidden;
+            border: 5px solid lightpink;
+        }
+        .images {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+        .slide_image {
+            display: none;
+        }
+        .slide_active {
+            display: block;
+        }
+        .vertical-center {
+            top: 50%;
+            position: relative;
+            transform: translateY(-50%);
+        }
+        .button_left {
+            position: absolute;
+            left:0;
+            background: lightgray;
+            padding: 0px;
+            opacity: 0;
+            height: 70px;
+            width: 20px;
+            border: 0;
+        }
+
+        .button_left:hover {
+            opacity: 0.5;
+        }
+
+        .button_right {
+            position: absolute;
+            right:0;
+            background: lightgray;
+            padding: 0px;
+            opacity: 0;
+            font-size: 15px;
+            height: 70px;
+            width: 20px;
+            border: 0;
+        }
+
+        .button_right:hover {
+            opacity: 0.5;
+        }
+
+        .image_indicator {
+            position: relative;
+            bottom: 70px;
+            text-align: center;
+            font-size: 0px;
+        }
+        .indicator_index {
+            display: inline-block;
+            width: 80px;
+            height: 60px;
+            padding: 3px;
+
+        }
+        .indicator_index:hover {
+            background: blue;
+        }
+
+        .active_indicator {
+            background: red;
+        }
+        </style>
+        <script src = 'http://cdn.bootcss.com/jquery/3.1.1/jquery.js'></script>
+    </head>
+    <body>
+        <div class="slide_container">
+            <div class="images">
+                <image class = 'slide_image slide_active' src = '1.jpg' alt = 'This is picture one'>
+                <image class = 'slide_image' src = '2.jpg' alt = 'This is picture two'>
+                <image class = 'slide_image' src = '3.jpg' alt = 'This is picture three'>
+                <image class = 'slide_image' src = '4.jpg' alt = 'This is picture four'>
+                <image class = 'slide_image' src = '5.jpg' alt = 'This is picture five'>
+                <image class = 'slide_image' src = '6.jpg' alt = 'This is picture six'>
+                <button class = 'button_left vertical-center'>&lt</button>
+                <button class = 'button_right vertical-center'>&gt</button>
+                <audio src = '云流れ副本.mp3'><audio>
+            </div>
+            <div class = 'image_indicator'>
+                <image class = 'indicator_index active_indicator' data-index = '1' src = '1.jpg'>
+                <image class = 'indicator_index' data-index = '2' src = '2.jpg'>
+                <image class = 'indicator_index' data-index = '3' src = '3.jpg'>
+                <image class = 'indicator_index' data-index = '4' src = '4.jpg'>
+                <image class = 'indicator_index' data-index = '5' src = '5.jpg'>
+                <image class = 'indicator_index' data-index = '6' src = '6.jpg'>
+            </div>
+        </div>
+    </body>
+<script>
+var play = function(offset) {
+    var active = $('.slide_active')
+    var activeindex = $('.active_indicator')
+    var images = $('.slide_image')
+    var indicators = $('.indicator_index')
+    for(var i = 0; i < images.length; i++) {
+        if($(images[i]).hasClass('slide_active')) {
+            var active_index = i
+        }
+    }
+    active.fadeOut()
+    active.removeClass('slide_active')
+    activeindex.removeClass('active_indicator')
+    var new_active_index = (active_index + images.length + offset) % images.length
+    $(images[new_active_index]).addClass('slide_active')
+    $(images[new_active_index]).fadeIn()
+    $(indicators[new_active_index]).addClass('active_indicator')
+}
+
+$('.vertical-center').on('click', function(event) {
+    var target = $(event.target)
+    if(target.hasClass('button_left')) {
+        play(-1)
+    } else if(target.hasClass('button_right')) {
+        play(1)
+    }
+})
+
+$('.indicator_index').on('click', function(event) {
+    var target = $(this)
+    var index = target.data('index')
+    console.log(index)
+    var active = $('.slide_active')
+    var activeindex = $('.active_indicator')
+    var images = $('.slide_image')
+    var indicators = $('.indicator_index')
+    active.fadeOut()
+    active.removeClass('slide_active')
+    $(images[index - 1]).addClass('slide_active')
+    $(images[index - 1]).fadeIn()
+    activeindex.removeClass('active_indicator')
+    $(indicators[index - 1]).addClass('active_indicator')
+})
+
+setInterval('play(1)', 3000)
+var player = $('audio')[0]
+player.play()
+</script>
+</html>
